@@ -230,16 +230,29 @@ function endDrag(e) {
   const { x: mouseX, y: mouseY } = getEventPosition(e);
   const targetX = Math.floor(mouseX / pieceWidth);
   const targetY = Math.floor(mouseY / pieceHeight);
-  const targetPiece = pieces.find(p => p.x === targetX && p.y === targetY);
+
+  // Limita targetX e targetY para ficar dentro do tabuleiro
+  const clampedX = Math.min(Math.max(targetX, 0), size - 1);
+  const clampedY = Math.min(Math.max(targetY, 0), size - 1);
+
+  const targetPiece = pieces.find(p => p.x === clampedX && p.y === clampedY);
+
   if (targetPiece && targetPiece !== dragPiece) {
+    // Troca as posições das peças
     [dragPiece.x, dragPiece.y, targetPiece.x, targetPiece.y] = [targetPiece.x, targetPiece.y, dragPiece.x, dragPiece.y];
+  } else {
+    // Só reposiciona a peça no lugar certo
+    dragPiece.x = clampedX;
+    dragPiece.y = clampedY;
   }
+
   dragPiece = null;
   isDragging = false;
   canvas.style.cursor = 'grab';
   drawPuzzle();
   checkWin();
 }
+
 
 // Eventos mouse
 canvas.addEventListener('mousedown', startDrag);
