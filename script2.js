@@ -242,10 +242,10 @@ function endDrag(e) {
   const targetPiece = pieces.find(p => p.x === targetX && p.y === targetY);
 
   if (targetPiece && targetPiece !== dragPiece) {
-    // Troca posição com a peça que está no lugar
+    // Troca posição
     [dragPiece.x, dragPiece.y, targetPiece.x, targetPiece.y] = [targetPiece.x, targetPiece.y, dragPiece.x, dragPiece.y];
   } else {
-    // Só reposiciona a peça na célula solta
+    // Só reposiciona no lugar correto
     dragPiece.x = targetX;
     dragPiece.y = targetY;
   }
@@ -256,6 +256,7 @@ function endDrag(e) {
   drawPuzzle();
   checkWin();
 }
+
 
 canvas.addEventListener('mouseup', endDrag);
 canvas.addEventListener('mouseleave', () => {
