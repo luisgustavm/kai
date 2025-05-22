@@ -13,11 +13,7 @@ const nextBtn = document.getElementById('nextBtn');
 let completedScratch = JSON.parse(localStorage.getItem('completedScratch')) || Array(messages.length).fill(false);
 let completedCount = completedScratch.filter(Boolean).length;
 
-if (completedCount === messages.length) {
-  nextBtn.style.display = 'inline-block';
-} else {
-  nextBtn.style.display = 'none';
-}
+nextBtn.style.display = (completedCount === messages.length) ? 'inline-block' : 'none';
 
 function createScratchCard(message, index) {
   const card = document.createElement('div');
@@ -28,8 +24,8 @@ function createScratchCard(message, index) {
   msgDiv.textContent = message;
 
   const canvas = document.createElement('canvas');
- canvas.width = 300;
-canvas.height = 180;
+  canvas.width = 300;
+  canvas.height = 180;
   const ctx = canvas.getContext('2d');
 
   ctx.fillStyle = '#b9aaf9';
@@ -40,25 +36,24 @@ canvas.height = 180;
   let isScratching = false;
 
   function getLocalCoords(e) {
-  const rect = canvas.getBoundingClientRect();
-  let x, y;
-  if (e.touches && e.touches.length > 0) {
-    x = e.touches[0].pageX - rect.left - window.pageXOffset;
-    y = e.touches[0].pageY - rect.top - window.pageYOffset;
-  } else {
-    x = e.clientX - rect.left;
-    y = e.clientY - rect.top;
+    const rect = canvas.getBoundingClientRect();
+    let x, y;
+    if (e.touches && e.touches.length > 0) {
+      x = e.touches[0].clientX - rect.left;
+      y = e.touches[0].clientY - rect.top;
+    } else {
+      x = e.clientX - rect.left;
+      y = e.clientY - rect.top;
+    }
+    return { x, y };
   }
-  return { x, y };
-}
-
 
   function scratch(x, y) {
-  ctx.beginPath();
-  ctx.arc(x, y, 30, 0, Math.PI * 2);
-  ctx.fill();
-  checkScratchPercent();
-}
+    ctx.beginPath();
+    ctx.arc(x, y, 30, 0, Math.PI * 2);
+    ctx.fill();
+    checkScratchPercent();
+  }
 
   function checkScratchPercent() {
     const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -82,14 +77,9 @@ canvas.height = 180;
   }
 
   function checkAllCompleted() {
-    if (completedCount === messages.length) {
-      nextBtn.style.display = 'inline-block';
-    } else {
-      nextBtn.style.display = 'none';
-    }
+    nextBtn.style.display = (completedCount === messages.length) ? 'inline-block' : 'none';
   }
 
-  // Mouse Events
   canvas.addEventListener('mousedown', e => {
     isScratching = true;
     const { x, y } = getLocalCoords(e);
@@ -106,26 +96,29 @@ canvas.height = 180;
     isScratching = false;
   });
 
-  // Touch Events
- canvas.addEventListener('touchstart', e => {
-  e.preventDefault();
-  isScratching = true;
-  const { x, y } = getLocalCoords(e);
-  scratch(x, y);
-}, { passive: false });
+  canvas.addEventListener('touchstart', e => {
+    e.preventDefault();
+    isScratching = true;
+    const { x, y } = getLocalCoords(e);
+    console.log('Touch start at:', x, y);
+    scratch(x, y);
+  }, { passive: false });
 
-canvas.addEventListener('touchmove', e => {
-  e.preventDefault();
-  if (!isScratching) return;
-  const { x, y } = getLocalCoords(e);
-  scratch(x, y);
-}, { passive: false });
+  canvas.addEventListener('touchmove', e => {
+    e.preventDefault();
+    if (!isScratching) return;
+    const { x, y } = getLocalCoords(e);
+    scratch(x, y);
+  }, { passive: false });
+
+  window.addEventListener('touchend', () => {
+    isScratching = false;
+  });
 
   window.addEventListener('touchcancel', () => {
     isScratching = false;
   });
 
-  // Se já estava completo anteriormente, mostra direto
   if (completedScratch[index]) {
     canvas.style.display = 'none';
     card.classList.add('completed');
@@ -139,5 +132,5 @@ canvas.addEventListener('touchmove', e => {
 messages.forEach((msg, i) => createScratchCard(msg, i));
 
 nextBtn.addEventListener('click', () => {
-  window.location.href = 'final.html'; // Redirecionamento final
+  window.location.href = 'final.html';
 });
