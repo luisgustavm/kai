@@ -28,8 +28,8 @@ function createScratchCard(message, index) {
   msgDiv.textContent = message;
 
   const canvas = document.createElement('canvas');
-  canvas.width = 200;
-  canvas.height = 120;
+ canvas.width = 300;
+canvas.height = 180;
   const ctx = canvas.getContext('2d');
 
   ctx.fillStyle = '#b9aaf9';
@@ -40,24 +40,25 @@ function createScratchCard(message, index) {
   let isScratching = false;
 
   function getLocalCoords(e) {
-    const rect = canvas.getBoundingClientRect();
-    let x, y;
-    if (e.touches && e.touches.length > 0) {
-      x = e.touches[0].clientX - rect.left;
-      y = e.touches[0].clientY - rect.top;
-    } else {
-      x = e.clientX - rect.left;
-      y = e.clientY - rect.top;
-    }
-    return { x, y };
+  const rect = canvas.getBoundingClientRect();
+  let x, y;
+  if (e.touches && e.touches.length > 0) {
+    x = e.touches[0].pageX - rect.left - window.pageXOffset;
+    y = e.touches[0].pageY - rect.top - window.pageYOffset;
+  } else {
+    x = e.clientX - rect.left;
+    y = e.clientY - rect.top;
   }
+  return { x, y };
+}
+
 
   function scratch(x, y) {
-    ctx.beginPath();
-    ctx.arc(x, y, 20, 0, Math.PI * 2);
-    ctx.fill();
-    checkScratchPercent();
-  }
+  ctx.beginPath();
+  ctx.arc(x, y, 30, 0, Math.PI * 2);
+  ctx.fill();
+  checkScratchPercent();
+}
 
   function checkScratchPercent() {
     const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
