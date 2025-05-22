@@ -1,227 +1,225 @@
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+/* === IMPORTAÇÃO DE FONTE === */
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: radial-gradient(circle at top left, #40168d, #d6cbff);
-      margin: 0;
-      padding: 30px;
-      text-align: center;
-      overflow-x: hidden;
-    }
-
-    h1 {
-      font-size: 3rem;
-      color: #7355f7;
-      margin-bottom: 10px;
-    }
-
-    h2 {
-      font-weight: 300;
-      font-size: 1.5rem;
-      margin-bottom: 40px;
-    }
-
-    .avatar {
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      border: 5px solid #fff;
-      box-shadow: 0 0 20px #ffd9ff;
-      margin: 0 auto 30px;
-      background: url('img/kai.jpg') center/cover no-repeat;
-    }
-
-    .message {
-      background: #fff8ff;
-      border: 2px dashed #ffb6f2;
-      padding: 20px;
-      margin: 20px auto;
-      max-width: 500px;
-      border-radius: 20px;
-      font-size: 1.2rem;
-      line-height: 1.6;
-    }
-
-    .surprise-btn {
-      margin-top: 20px;
-      padding: 10px 20px;
-      background-color: #ffe0f7;
-      border: none;
-      border-radius: 20px;
-      font-size: 1rem;
-      color: #9e30a8;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      cursor: pointer;
-      transition: 0.3s ease;
-    }
-
-    .surprise-btn:hover {
-      background-color: #fbd6ff;
-    }
-
-    .hidden-message {
-      display: none;
-      margin-top: 20px;
-      font-size: 1.2rem;
-      color: #6d2a84;
-    }
-
-    /* Estrelas flutuantes */
-    .star {
-      position: absolute;
-      width: 6px;
-      height: 6px;
-      background: white;
-      border-radius: 50%;
-      opacity: 0.8;
-      animation: float 10s infinite linear;
-    }
-
-    @keyframes float {
-      from {
-        transform: translateY(0) scale(1);
-      }
-      to {
-        transform: translateY(-120vh) scale(1.5);
-      }
-    }
- @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
-    .body2 {
-      font-family: 'Poppins', sans-serif;
-      background: radial-gradient(circle at top left, #f0e8ff, #d6cbff);
-      margin: 0;
-      padding: 30px;
-      text-align: center;
-      overflow-x: hidden;
-    }
-    h1 {
-      color: #7b3fc7;
-      margin-bottom: 40px;
-    }
-    #puzzleSelect {
-      display: flex;
-      justify-content: center;
-      gap: 25px;
-      flex-wrap: wrap;
-    }
-    #completedImage {
-  display: none;
-  margin: 0 auto;
-  margin-top: 20px;
+/* === CONFIGURAÇÕES GERAIS === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-    .puzzle-card {
-      width: 200px;
-      border-radius: 15px;
-      box-shadow: 0 4px 15px rgba(123, 63, 199, 0.3);
-      background: white;
-      padding: 15px;
-      position: relative;
-      cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      user-select: none;
-    }
-    .puzzle-card:hover:not(.locked) {
-      transform: scale(1.1);
-      box-shadow: 0 8px 25px rgba(123, 63, 199, 0.5);
-    }
-    .puzzle-card.locked {
-      cursor: not-allowed;
-      filter: grayscale(100%) brightness(0.7);
-    }
-    .puzzle-card img {
-      width: 100%;
-      border-radius: 12px;
-      display: block;
-      margin-bottom: 12px;
-      transition: filter 0.3s ease;
-    }
-    .puzzle-card.locked img {
-      filter: grayscale(100%) brightness(0.5);
-    }
-    .puzzle-button {
-      background: #7b3fc7;
-      border: none;
-      color: white;
-      font-weight: 600;
-      padding: 10px 18px;
-      border-radius: 12px;
-      width: 100%;
-      font-size: 1rem;
-      transition: background 0.3s ease;
-      cursor: pointer;
-      user-select: none;
-    }
-    .puzzle-button:hover:not(:disabled) {
-      background: #9b5ff7;
-    }
-    .puzzle-button:disabled {
-      background: #a89fcf;
-      cursor: not-allowed;
-    }
-    #puzzleContainer {
-      margin: 40px auto 0;
-      max-width: 600px;
-      position: relative;
-      opacity: 0;
-      transform: scale(0.8);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-      pointer-events: none;
-    }
-    #puzzleContainer.show {
-      opacity: 1;
-      transform: scale(1);
-      pointer-events: auto;
-    }
-    canvas {
-      border: 5px solid #d5a6ff;
-      border-radius: 15px;
-      box-shadow: 0 0 30px rgba(123, 63, 199, 0.25);
-      display: block;
-      margin: 0 auto;
-      cursor: grab;
-      background: white;
-    }
-    #completedImage {
-      max-width: 100%;
-      border-radius: 15px;
-      box-shadow: 0 0 30px rgba(123, 63, 199, 0.25);
-      margin: 0 auto;
-      display: none;
-    }
-    #controls {
-      margin-top: 25px;
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-    }
-    #controls button {
-      background: #7b3fc7;
-      border: none;
-      color: white;
-      font-weight: 600;
-      padding: 12px 22px;
-      border-radius: 12px;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: background 0.3s ease;
-      user-select: none;
-    }
-    #controls button:hover:not(:disabled) {
-      background: #9b5ff7;
-    }
-    #controls button:disabled {
-      background: #a89fcf;
-      cursor: not-allowed;
-    }
-#meuBotao{
+body {
+  font-family: 'Poppins', sans-serif;
+  background: radial-gradient(circle at top left, #40168d, #d6cbff);
+  padding: 30px;
+  text-align: center;
+  overflow-x: hidden;
+}
+
+/* === CABEÇALHOS === */
+h1 {
+  font-size: 2.5rem;
+  color: #7355f7;
+  margin-bottom: 20px;
+}
+h2 {
+  font-weight: 300;
+  font-size: 1.5rem;
+  margin-bottom: 40px;
+}
+
+/* === AVATAR === */
+.avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 5px solid #fff;
+  box-shadow: 0 0 20px #ffd9ff;
+  margin: 0 auto 30px;
+  background: url('img/kai.jpg') center/cover no-repeat;
+}
+
+/* === MENSAGEM DE SURPRESA === */
+.message {
+  background: #fff8ff;
+  border: 2px dashed #ffb6f2;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 500px;
+  border-radius: 20px;
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+.surprise-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #ffe0f7;
+  border: none;
+  border-radius: 20px;
+  font-size: 1rem;
+  color: #9e30a8;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+.surprise-btn:hover {
+  background-color: #fbd6ff;
+}
+.hidden-message {
+  display: none;
+  margin-top: 20px;
+  font-size: 1.2rem;
+  color: #6d2a84;
+}
+
+/* === ESTRELAS FLUTUANTES === */
+.star {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: float 10s infinite linear;
+}
+@keyframes float {
+  from {
+    transform: translateY(0) scale(1);
+  }
+  to {
+    transform: translateY(-120vh) scale(1.5);
+  }
+}
+
+/* === PUZZLE SECTION === */
+#puzzleSelect {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  flex-wrap: wrap;
+}
+
+/* === CARTÕES DE PUZZLE === */
+.puzzle-card {
+  width: 200px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(123, 63, 199, 0.3);
+  background: white;
+  padding: 15px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  user-select: none;
+}
+.puzzle-card:hover:not(.locked) {
+  transform: scale(1.1);
+  box-shadow: 0 8px 25px rgba(123, 63, 199, 0.5);
+}
+.puzzle-card.locked {
+  cursor: not-allowed;
+  filter: grayscale(100%) brightness(0.7);
+}
+.puzzle-card img {
+  width: 100%;
+  border-radius: 12px;
+  display: block;
+  margin-bottom: 12px;
+  transition: filter 0.3s ease;
+}
+.puzzle-card.locked img {
+  filter: grayscale(100%) brightness(0.5);
+}
+
+/* === BOTÕES DOS PUZZLES === */
+.puzzle-button {
+  background: #7b3fc7;
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: 12px;
+  width: 100%;
+  font-size: 1rem;
+  transition: background 0.3s ease;
+  cursor: pointer;
+  user-select: none;
+}
+.puzzle-button:hover:not(:disabled) {
+  background: #9b5ff7;
+}
+.puzzle-button:disabled {
+  background: #a89fcf;
+  cursor: not-allowed;
+}
+
+/* === ÁREA DO PUZZLE CANVAS === */
+#puzzleContainer {
+  margin: 40px auto 0;
+  max-width: 600px;
+  position: relative;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  pointer-events: none;
+}
+#puzzleContainer.show {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+/* === CANVAS === */
+canvas {
+  border: 5px solid #d5a6ff;
+  border-radius: 15px;
+  box-shadow: 0 0 30px rgba(123, 63, 199, 0.25);
+  display: block;
+  margin: 0 auto;
+  cursor: grab;
+  background: white;
+}
+
+/* === IMAGEM COMPLETA DO PUZZLE === */
+#completedImage {
+  max-width: 100%;
+  border-radius: 15px;
+  box-shadow: 0 0 30px rgba(123, 63, 199, 0.25);
+  margin: 0 auto;
+  display: none;
+}
+
+/* === CONTROLES DE AÇÃO === */
+#controls {
+  margin-top: 25px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+#controls button {
+  background: #7b3fc7;
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: 12px 22px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  user-select: none;
+}
+#controls button:hover:not(:disabled) {
+  background: #9b5ff7;
+}
+#controls button:disabled {
+  background: #a89fcf;
+  cursor: not-allowed;
+}
+
+/* === BOTÕES FIXOS === */
+#meuBotao {
   position: fixed;
   top: 20px;
-  right: 1180px;
+  right: 20px;
   background-color: #7b3fc7;
   color: white;
   border: none;
@@ -229,13 +227,12 @@
   font-size: 0.9rem;
   border-radius: 8px;
   cursor: pointer;
-  z-index: 1000; /* garante que fique acima de outros elementos */
+  z-index: 1000;
 }
-
 .meuBotao2 {
   position: fixed;
-  top: 60px;
-  right: 1120px;
+  top: 70px;
+  right: 20px;
   background-color: #7b3fc7;
   color: white;
   border: none;
@@ -243,5 +240,29 @@
   font-size: 0.9rem;
   border-radius: 8px;
   cursor: pointer;
-  z-index: 1000; /* garante que fique acima de outros elementos */
+  z-index: 1000;
+}
+
+/* === RESPONSIVIDADE PARA MOBILE === */
+@media (max-width: 600px) {
+  h1 {
+    font-size: 2rem;
+  }
+  .avatar {
+    width: 120px;
+    height: 120px;
+  }
+  .puzzle-card {
+    width: 100%;
+    max-width: 300px;
+  }
+  #controls {
+    flex-direction: column;
+  }
+  #meuBotao,
+  .meuBotao2 {
+    right: 10px;
+    font-size: 0.8rem;
+    padding: 8px 12px;
+  }
 }

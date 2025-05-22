@@ -4,31 +4,28 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Quebra-Cabeça Mobile</title>
- <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>Quebra-Cabeças 🧩</h1>
-  <h2>Faça todos os Quebra-Cabeças! Assim poderá seguir para a proxima tela.</h2>
-<button onclick="window.location.href='inicio.html'" id="meuBotao">
-  Voltar
-</button>
-  <div id="puzzleSelect"></div>
 
-  <div id="puzzleContainer">
-    <canvas id="puzzleCanvas"></canvas>
-    <img id="completedImage" alt="Imagem Montada Completa" />
-    <div id="controls">
-      <button id="nextBtn" style="display: none;">Próximo</button>
+<h2>Quebra-Cabeça Mobile</h2>
 
-    </div>
-  </div>
-</body>
+<div id="puzzleSelect"></div>
+
+<div id="puzzleContainer">
+  <canvas id="puzzleCanvas"></canvas>
+  <img id="completedImage" alt="Imagem Completa"/>
+</div>
+
+<div id="message"></div>
+
 <script>
 const puzzleImages = [
   'img/kai.jpg',
   'img/kai2.jpg',
   'img/kai3.jpg',
 ];
+
   const size = 3;
   let completedPuzzles = JSON.parse(localStorage.getItem('completedPuzzles')) || [false, false, false];
   let currentPuzzleIndex = null;
@@ -270,4 +267,5 @@ const puzzleImages = [
 
   renderPuzzleCards();
 </script>
+</body>
 </html>
