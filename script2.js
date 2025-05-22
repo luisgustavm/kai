@@ -19,8 +19,10 @@ let dragPiece = null;
 let dragOffsetX = 0;
 let dragOffsetY = 0;
 let pieceWidth, pieceHeight;
+let originalPieceWidth, originalPieceHeight;
 let image = new Image();
 let puzzleCompleted = false;
+let isDragging = false;
 
 function renderPuzzleCards() {
   puzzleSelect.innerHTML = '';
@@ -165,7 +167,6 @@ function checkWin() {
     localStorage.setItem('completedPuzzles', JSON.stringify(completedPuzzles));
     updateButtons();
 
-    // ✅ Exibe o botão "Próximo" se todos estiverem completos
     if (completedPuzzles.every(v => v)) {
       nextBtn.style.display = 'inline-block';
     }
@@ -184,12 +185,23 @@ function updateButtons() {
   renderPuzzleCards();
 }
 
-canvas.addEventListener('mousedown', e => {
+function getEventPosition(e) {
+  const rect = canvas.getBoundingClientRect();
+  let x, y;
+  if (e.touches && e.touches.length > 0) {
+    x = e.touches[0].clientX - rect.left;
+    y = e.touches[0].clientY - rect.top;
+  } else {
+    x = e.clientX - rect.left;
+    y = e.clientY - rect.top;
+  }
+  return { x, y };
+}
+
+function startDrag(e) {
   if (puzzleCompleted) return;
 
-  const rect = canvas.getBoundingClientRect();
-  const mouseX = e.clientX - rect.left;
-  const mouseY = e.clientY - rect.top;
+  const { x: mouseX, y: mouseY } = getEventPosition(e);
 
   const piece = getPieceAt(mouseX, mouseY);
   if (piece) {
@@ -198,47 +210,72 @@ canvas.addEventListener('mousedown', e => {
     dragOffsetY = mouseY - piece.y * pieceHeight;
     dragPiece.drawX = mouseX - dragOffsetX;
     dragPiece.drawY = mouseY - dragOffsetY;
+    isDragging = true;
     canvas.style.cursor = 'grabbing';
   }
-});
+}
 
-canvas.addEventListener('mousemove', e => {
-  if (dragPiece) {
-    const rect = canvas.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    dragPiece.drawX = mouseX - dragOffsetX;
-    dragPiece.drawY = mouseY - dragOffsetY;
-    drawPuzzle(true);
+function moveDrag(e) {
+  if (!isDragging || !dragPiece) return;
+
+  const { x: mouseX, y: mouseY } = getEventPosition(e);
+  dragPiece.drawX = mouseX - dragOffsetX;
+  dragPiece.drawY = mouseY - dragOffsetY;
+  drawPuzzle(true);
+}
+
+function endDrag(e) {
+  if (!isDragging || !dragPiece) return;
+
+  const { x: mouseX, y: mouseY } = getEventPosition(e);
+  const targetX = Math.floor(mouseX / pieceWidth);
+  const targetY = Math.floor(mouseY / pieceHeight);
+  const targetPiece = pieces.find(p => p.x === targetX && p.y === targetY);
+  if (targetPiece && targetPiece !== dragPiece) {
+    [dragPiece.x, dragPiece.y, targetPiece.x, targetPiece.y] = [targetPiece.x, targetPiece.y, dragPiece.x, dragPiece.y];
   }
-});
+  dragPiece = null;
+  isDragging = false;
+  canvas.style.cursor = 'grab';
+  drawPuzzle();
+  checkWin();
+}
 
-canvas.addEventListener('mouseup', e => {
-  if (dragPiece) {
-    const rect = canvas.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    const targetX = Math.floor(mouseX / pieceWidth);
-    const targetY = Math.floor(mouseY / pieceHeight);
-    const targetPiece = pieces.find(p => p.x === targetX && p.y === targetY);
-    if (targetPiece && targetPiece !== dragPiece) {
-      [dragPiece.x, dragPiece.y, targetPiece.x, targetPiece.y] = [targetPiece.x, targetPiece.y, dragPiece.x, dragPiece.y];
-    }
-    dragPiece = null;
-    canvas.style.cursor = 'grab';
-    drawPuzzle();
-    checkWin();
-  }
-});
-
+// Eventos mouse
+canvas.addEventListener('mousedown', startDrag);
+canvas.addEventListener('mousemove', moveDrag);
+canvas.addEventListener('mouseup', endDrag);
 canvas.addEventListener('mouseleave', () => {
   if (dragPiece) {
     dragPiece = null;
+    isDragging = false;
     canvas.style.cursor = 'grab';
     drawPuzzle();
   }
 });
 
+// Eventos toque (touch)
+canvas.addEventListener('touchstart', e => {
+  e.preventDefault();
+  startDrag(e);
+}, { passive: false });
+
+canvas.addEventListener('touchmove', e => {
+  e.preventDefault();
+  moveDrag(e);
+}, { passive: false });
+
+canvas.addEventListener('touchend', e => {
+  e.preventDefault();
+  endDrag(e);
+}, { passive: false });
+
+canvas.addEventListener('touchcancel', e => {
+  e.preventDefault();
+  endDrag(e);
+}, { passive: false });
+
+// Botão próximo
 nextBtn.addEventListener('click', () => {
   window.location.href = 'raspadinha.html';
 });
@@ -246,7 +283,7 @@ nextBtn.addEventListener('click', () => {
 // Inicializa os cards
 renderPuzzleCards();
 
-// ✅ Verifica se os puzzles já foram completados no carregamento
+// Verifica se os puzzles já foram completados ao carregar
 if (completedPuzzles.every(v => v)) {
   nextBtn.style.display = 'inline-block';
 }
