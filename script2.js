@@ -19,6 +19,7 @@ let dragPiece = null;
 let dragOffsetX = 0;
 let dragOffsetY = 0;
 let pieceWidth, pieceHeight;
+let originalPieceWidth, originalPieceHeight;
 let image = new Image();
 let puzzleCompleted = false;
 
@@ -250,13 +251,16 @@ function endDrag(e) {
     dragPiece.y = targetY;
   }
 
+  // Atualiza drawX/drawY para a posição fixa da grade (em pixels)
+  dragPiece.drawX = dragPiece.x * pieceWidth;
+  dragPiece.drawY = dragPiece.y * pieceHeight;
+
   dragPiece = null;
   isDragging = false;
   canvas.style.cursor = 'grab';
   drawPuzzle();
   checkWin();
 }
-
 
 canvas.addEventListener('mouseup', endDrag);
 canvas.addEventListener('mouseleave', () => {
