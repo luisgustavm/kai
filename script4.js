@@ -107,23 +107,19 @@ canvas.height = 180;
   });
 
   // Touch Events
-  canvas.addEventListener('touchstart', e => {
-    e.preventDefault();
-    isScratching = true;
-    const { x, y } = getLocalCoords(e);
-    scratch(x, y);
-  }, { passive: false });
+ canvas.addEventListener('touchstart', e => {
+  e.preventDefault();
+  isScratching = true;
+  const { x, y } = getLocalCoords(e);
+  scratch(x, y);
+}, { passive: false });
 
-  canvas.addEventListener('touchmove', e => {
-    e.preventDefault();
-    if (!isScratching) return;
-    const { x, y } = getLocalCoords(e);
-    scratch(x, y);
-  }, { passive: false });
-
-  window.addEventListener('touchend', () => {
-    isScratching = false;
-  });
+canvas.addEventListener('touchmove', e => {
+  e.preventDefault();
+  if (!isScratching) return;
+  const { x, y } = getLocalCoords(e);
+  scratch(x, y);
+}, { passive: false });
 
   window.addEventListener('touchcancel', () => {
     isScratching = false;
