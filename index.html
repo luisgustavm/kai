@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Login Secreto</title>
+     <script src="script3.js" defer></script>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+       background: radial-gradient(circle at top left, #40168d, #d6cbff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .login-container {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 15px;
+      box-shadow: 0 8px 30px rgba(123, 63, 199, 0.2);
+      text-align: center;
+      width: 300px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #7b3fc7;
+    }
+
+    input {
+      padding: 8px;
+      margin: 8px 0;
+      width: 90%;
+      border: 2px solid #d5a6ff;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+
+    button {
+      background: #7b3fc7;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      font-size: 0.9rem;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #9b5ff7;
+    }
+
+    #error {
+      color: red;
+      margin-top: 10px;
+      font-weight: bold;
+      display: none;
+      font-size: 0.9rem;
+    }
+
+    #continueBtn {
+      margin-top: 12px;
+      display: none;
+    }
+
+    .meuBotao2 {
+  position: fixed;
+  top: 60px;
+  right: 1120px;
+  background-color: #7b3fc7;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 1000; /* garante que fique acima de outros elementos */
+}
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Bem-vindo, Kaique!</h2>
+    <input type="text" id="nomeInput" placeholder="Seu nome">
+    <input type="text" id="respostaInput" placeholder="Qual meu apelido?">
+    <button id="enviarBtn" onclick="verificarResposta()">Enviar</button>
+
+    <p id="error">Incorreto, tente novamente :(</p>
+    <button id="continueBtn" onclick="continuar()">Continuar</button>
+  </div>
+
+  <script>
+    function verificarResposta() {
+      const respostaCorreta = "luisito"; // Personalize conforme seu apelido
+      const nome = document.getElementById("nomeInput").value.trim();
+      const respostaUsuario = document.getElementById("respostaInput").value.trim().toLowerCase();
+      const enviarBtn = document.getElementById("enviarBtn");
+
+      enviarBtn.style.display = "none"; // Esconde o botão após clique
+
+      if (respostaUsuario === respostaCorreta && nome !== "") {
+        document.getElementById("error").style.display = "none";
+        document.getElementById("continueBtn").style.display = "inline-block";
+      } else {
+        document.getElementById("error").style.display = "block";
+      }
+    }
+
+    function continuar() {
+      alert("Tudo certo! Vamos continuar :)");
+      // Exemplo de redirecionamento:
+       window.location.href = "inicio.html";
+    }
+  </script>
+</body>
+</html>
