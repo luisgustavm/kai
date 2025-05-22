@@ -10,12 +10,15 @@ const messages = [
 const gallery = document.getElementById('gallery');
 const nextBtn = document.getElementById('nextBtn');
 
+// Carrega o progresso do localStorage ou inicializa como falso
 let completedScratch = JSON.parse(localStorage.getItem('completedScratch')) || Array(messages.length).fill(false);
 let completedCount = completedScratch.filter(Boolean).length;
 
-// ✅ Se já estiver tudo completo ao carregar, mostra o botão
+// Esconde o botão no começo, só mostra se tudo já estiver completo
 if (completedCount === messages.length) {
   nextBtn.style.display = 'inline-block';
+} else {
+  nextBtn.style.display = 'none';
 }
 
 function createScratchCard(message, index) {
@@ -72,9 +75,9 @@ function createScratchCard(message, index) {
 
     if (percent >= 80 && !card.classList.contains('completed')) {
       card.classList.add('completed');
-      completedCount++;
       completedScratch[index] = true;
       localStorage.setItem('completedScratch', JSON.stringify(completedScratch));
+      completedCount = completedScratch.filter(Boolean).length; // Atualiza contagem
       canvas.style.display = 'none';
       checkAllCompleted();
     }
@@ -83,6 +86,8 @@ function createScratchCard(message, index) {
   function checkAllCompleted() {
     if (completedCount === messages.length) {
       nextBtn.style.display = 'inline-block';
+    } else {
+      nextBtn.style.display = 'none';
     }
   }
 
