@@ -24,8 +24,9 @@ function createScratchCard(message, index) {
   msgDiv.textContent = message;
 
   const canvas = document.createElement('canvas');
-  canvas.width = 300;
-  canvas.height = 180;
+  canvas.width = 200;  // mesmo tamanho do card
+  canvas.height = 120;
+
   const ctx = canvas.getContext('2d');
 
   ctx.fillStyle = '#b9aaf9';
@@ -50,7 +51,7 @@ function createScratchCard(message, index) {
 
   function scratch(x, y) {
     ctx.beginPath();
-    ctx.arc(x, y, 30, 0, Math.PI * 2);
+    ctx.arc(x, y, 25, 0, Math.PI * 2); // círculo do raspadinha
     ctx.fill();
     checkScratchPercent();
   }
@@ -100,7 +101,6 @@ function createScratchCard(message, index) {
     e.preventDefault();
     isScratching = true;
     const { x, y } = getLocalCoords(e);
-    console.log('Touch start at:', x, y);
     scratch(x, y);
   }, { passive: false });
 

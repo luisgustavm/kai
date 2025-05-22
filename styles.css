@@ -91,6 +91,84 @@ h2 {
   }
 }
 
+/* === CONTROLES DE AÇÃO === */
+#controls {
+  margin-top: 25px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+#controls button {
+  background: #7b3fc7;
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: 12px 22px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  user-select: none;
+}
+#controls button:hover:not(:disabled) {
+  background: #9b5ff7;
+}
+#controls button:disabled {
+  background: #a89fcf;
+  cursor: not-allowed;
+}
+
+/* === BOTÕES FIXOS === */
+#meuBotao {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #7b3fc7;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 1000;
+}
+.meuBotao2 {
+  position: fixed;
+  top: 70px;
+  right: 20px;
+  background-color: #7b3fc7;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+/* === RESPONSIVIDADE PARA MOBILE === */
+@media (max-width: 600px) {
+  h1 {
+    font-size: 2rem;
+  }
+  .avatar {
+    width: 120px;
+    height: 120px;
+  }
+  .puzzle-card {
+    width: 100%;
+    max-width: 300px;
+  }
+  #controls {
+    flex-direction: column;
+  }
+  #meuBotao,
+  .meuBotao2 {
+    right: 10px;
+    font-size: 0.8rem;
+    padding: 8px 12px;
+  }
+}
 /* === PUZZLE SECTION === */
 #puzzleSelect {
   display: flex;
@@ -219,84 +297,5 @@ canvas {
   }
   canvas {
     max-width: 100%;
-  }
-}
-
-/* === CONTROLES DE AÇÃO === */
-#controls {
-  margin-top: 25px;
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-}
-#controls button {
-  background: #7b3fc7;
-  border: none;
-  color: white;
-  font-weight: 600;
-  padding: 12px 22px;
-  border-radius: 12px;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  user-select: none;
-}
-#controls button:hover:not(:disabled) {
-  background: #9b5ff7;
-}
-#controls button:disabled {
-  background: #a89fcf;
-  cursor: not-allowed;
-}
-
-/* === BOTÕES FIXOS === */
-#meuBotao {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background-color: #7b3fc7;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  font-size: 0.9rem;
-  border-radius: 8px;
-  cursor: pointer;
-  z-index: 1000;
-}
-.meuBotao2 {
-  position: fixed;
-  top: 70px;
-  right: 20px;
-  background-color: #7b3fc7;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  font-size: 0.9rem;
-  border-radius: 8px;
-  cursor: pointer;
-  z-index: 1000;
-}
-
-/* === RESPONSIVIDADE PARA MOBILE === */
-@media (max-width: 600px) {
-  h1 {
-    font-size: 2rem;
-  }
-  .avatar {
-    width: 120px;
-    height: 120px;
-  }
-  .puzzle-card {
-    width: 100%;
-    max-width: 300px;
-  }
-  #controls {
-    flex-direction: column;
-  }
-  #meuBotao,
-  .meuBotao2 {
-    right: 10px;
-    font-size: 0.8rem;
-    padding: 8px 12px;
   }
 }

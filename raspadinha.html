@@ -3,10 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-
 <title>Raspadinha da Mensagem:3</title>
 <script src="script.js" defer></script>
-   <script src="script3.js" defer></script>
 <script src="script4.js" defer></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
@@ -59,12 +57,15 @@
     margin-bottom: 40px;
   }
 
-  .gallery {
-    display: grid;
-    grid-template-columns: repeat(3, 200px);
-    grid-gap: 25px;
-    justify-content: center;
-  }
+ .gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  align-items: center; /* centraliza horizontalmente */
+  max-width: 220px; /* para limitar a largura dos cards juntos */
+  margin: 0 auto; /* centralizar a galeria na página */
+}
+
 
   .scratch-card {
     position: relative;
@@ -133,10 +134,5 @@
 <div class="gallery" id="gallery"></div>
 
 <button id="nextBtn">Próxima Tela</button>
-
-<script>
- 
-</script>
-
 </body>
 </html>
