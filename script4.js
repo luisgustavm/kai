@@ -10,11 +10,9 @@ const messages = [
 const gallery = document.getElementById('gallery');
 const nextBtn = document.getElementById('nextBtn');
 
-// Carrega o progresso do localStorage ou inicializa como falso
 let completedScratch = JSON.parse(localStorage.getItem('completedScratch')) || Array(messages.length).fill(false);
 let completedCount = completedScratch.filter(Boolean).length;
 
-// Esconde o botão no começo, só mostra se tudo já estiver completo
 if (completedCount === messages.length) {
   nextBtn.style.display = 'inline-block';
 } else {
@@ -34,7 +32,6 @@ function createScratchCard(message, index) {
   canvas.height = 120;
   const ctx = canvas.getContext('2d');
 
-  // Preenche o canvas com cor sólida (cinza claro)
   ctx.fillStyle = '#b9aaf9';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -45,7 +42,7 @@ function createScratchCard(message, index) {
   function getLocalCoords(e) {
     const rect = canvas.getBoundingClientRect();
     let x, y;
-    if (e.touches) {
+    if (e.touches && e.touches.length > 0) {
       x = e.touches[0].clientX - rect.left;
       y = e.touches[0].clientY - rect.top;
     } else {
@@ -77,7 +74,7 @@ function createScratchCard(message, index) {
       card.classList.add('completed');
       completedScratch[index] = true;
       localStorage.setItem('completedScratch', JSON.stringify(completedScratch));
-      completedCount = completedScratch.filter(Boolean).length; // Atualiza contagem
+      completedCount = completedScratch.filter(Boolean).length;
       canvas.style.display = 'none';
       checkAllCompleted();
     }
@@ -91,6 +88,7 @@ function createScratchCard(message, index) {
     }
   }
 
+  // Mouse Events
   canvas.addEventListener('mousedown', e => {
     isScratching = true;
     const { x, y } = getLocalCoords(e);
@@ -107,6 +105,7 @@ function createScratchCard(message, index) {
     isScratching = false;
   });
 
+  // Touch Events
   canvas.addEventListener('touchstart', e => {
     e.preventDefault();
     isScratching = true;
@@ -122,6 +121,10 @@ function createScratchCard(message, index) {
   }, { passive: false });
 
   window.addEventListener('touchend', () => {
+    isScratching = false;
+  });
+
+  window.addEventListener('touchcancel', () => {
     isScratching = false;
   });
 
