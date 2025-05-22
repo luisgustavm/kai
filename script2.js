@@ -19,10 +19,8 @@ let dragPiece = null;
 let dragOffsetX = 0;
 let dragOffsetY = 0;
 let pieceWidth, pieceHeight;
-let originalPieceWidth, originalPieceHeight;
 let image = new Image();
 let puzzleCompleted = false;
-let isDragging = false;
 
 function renderPuzzleCards() {
   puzzleSelect.innerHTML = '';
@@ -187,63 +185,69 @@ function updateButtons() {
 
 function getEventPosition(e) {
   const rect = canvas.getBoundingClientRect();
-  let x, y;
-  if (e.touches && e.touches.length > 0) {
-    x = e.touches[0].clientX - rect.left;
-    y = e.touches[0].clientY - rect.top;
+  let clientX, clientY;
+
+  if (e.touches && e.touches.length) {
+    clientX = e.touches[0].clientX;
+    clientY = e.touches[0].clientY;
   } else {
-    x = e.clientX - rect.left;
-    y = e.clientY - rect.top;
+    clientX = e.clientX;
+    clientY = e.clientY;
   }
-  return { x, y };
+
+  return {
+    x: clientX - rect.left,
+    y: clientY - rect.top
+  };
 }
 
-function startDrag(e) {
+let isDragging = false;
+
+canvas.addEventListener('mousedown', e => {
   if (puzzleCompleted) return;
 
-  const { x: mouseX, y: mouseY } = getEventPosition(e);
+  const { x, y } = getEventPosition(e);
 
-  const piece = getPieceAt(mouseX, mouseY);
+  const piece = getPieceAt(x, y);
   if (piece) {
     dragPiece = piece;
-    dragOffsetX = mouseX - piece.x * pieceWidth;
-    dragOffsetY = mouseY - piece.y * pieceHeight;
-    dragPiece.drawX = mouseX - dragOffsetX;
-    dragPiece.drawY = mouseY - dragOffsetY;
+    dragOffsetX = x - piece.x * pieceWidth;
+    dragOffsetY = y - piece.y * pieceHeight;
+    dragPiece.drawX = x - dragOffsetX;
+    dragPiece.drawY = y - dragOffsetY;
     isDragging = true;
     canvas.style.cursor = 'grabbing';
   }
-}
+});
 
-function moveDrag(e) {
+canvas.addEventListener('mousemove', e => {
   if (!isDragging || !dragPiece) return;
-
-  const { x: mouseX, y: mouseY } = getEventPosition(e);
-  dragPiece.drawX = mouseX - dragOffsetX;
-  dragPiece.drawY = mouseY - dragOffsetY;
+  const { x, y } = getEventPosition(e);
+  dragPiece.drawX = x - dragOffsetX;
+  dragPiece.drawY = y - dragOffsetY;
   drawPuzzle(true);
-}
+});
 
 function endDrag(e) {
   if (!isDragging || !dragPiece) return;
+  const { x, y } = getEventPosition(e);
 
-  const { x: mouseX, y: mouseY } = getEventPosition(e);
-  const targetX = Math.floor(mouseX / pieceWidth);
-  const targetY = Math.floor(mouseY / pieceHeight);
+  let targetX = Math.floor(x / pieceWidth);
+  let targetY = Math.floor(y / pieceHeight);
 
-  // Limita targetX e targetY para ficar dentro do tabuleiro
-  const clampedX = Math.min(Math.max(targetX, 0), size - 1);
-  const clampedY = Math.min(Math.max(targetY, 0), size - 1);
+  // Limita o target dentro da grade
+  targetX = Math.min(Math.max(targetX, 0), size - 1);
+  targetY = Math.min(Math.max(targetY, 0), size - 1);
 
-  const targetPiece = pieces.find(p => p.x === clampedX && p.y === clampedY);
+  const targetPiece = pieces.find(p => p.x === targetX && p.y === targetY);
 
   if (targetPiece && targetPiece !== dragPiece) {
-    // Troca as posições das peças
+    // Troca posição com a peça que está no lugar
     [dragPiece.x, dragPiece.y, targetPiece.x, targetPiece.y] = [targetPiece.x, targetPiece.y, dragPiece.x, dragPiece.y];
   } else {
-    // Só reposiciona a peça no lugar certo
-    dragPiece.x = clampedX;
-    dragPiece.y = clampedY;
+    // Só reposiciona a peça na célula solta
+    dragPiece.x = targetX;
+    dragPiece.y = targetY;
   }
 
   dragPiece = null;
@@ -253,13 +257,9 @@ function endDrag(e) {
   checkWin();
 }
 
-
-// Eventos mouse
-canvas.addEventListener('mousedown', startDrag);
-canvas.addEventListener('mousemove', moveDrag);
 canvas.addEventListener('mouseup', endDrag);
 canvas.addEventListener('mouseleave', () => {
-  if (dragPiece) {
+  if (isDragging) {
     dragPiece = null;
     isDragging = false;
     canvas.style.cursor = 'grab';
@@ -267,15 +267,32 @@ canvas.addEventListener('mouseleave', () => {
   }
 });
 
-// Eventos toque (touch)
+// Suporte a toque no celular
 canvas.addEventListener('touchstart', e => {
   e.preventDefault();
-  startDrag(e);
+  if (puzzleCompleted) return;
+
+  const { x, y } = getEventPosition(e);
+
+  const piece = getPieceAt(x, y);
+  if (piece) {
+    dragPiece = piece;
+    dragOffsetX = x - piece.x * pieceWidth;
+    dragOffsetY = y - piece.y * pieceHeight;
+    dragPiece.drawX = x - dragOffsetX;
+    dragPiece.drawY = y - dragOffsetY;
+    isDragging = true;
+    canvas.style.cursor = 'grabbing';
+  }
 }, { passive: false });
 
 canvas.addEventListener('touchmove', e => {
   e.preventDefault();
-  moveDrag(e);
+  if (!isDragging || !dragPiece) return;
+  const { x, y } = getEventPosition(e);
+  dragPiece.drawX = x - dragOffsetX;
+  dragPiece.drawY = y - dragOffsetY;
+  drawPuzzle(true);
 }, { passive: false });
 
 canvas.addEventListener('touchend', e => {
@@ -283,20 +300,12 @@ canvas.addEventListener('touchend', e => {
   endDrag(e);
 }, { passive: false });
 
-canvas.addEventListener('touchcancel', e => {
-  e.preventDefault();
-  endDrag(e);
-}, { passive: false });
-
-// Botão próximo
 nextBtn.addEventListener('click', () => {
   window.location.href = 'raspadinha.html';
 });
 
-// Inicializa os cards
 renderPuzzleCards();
 
-// Verifica se os puzzles já foram completados ao carregar
 if (completedPuzzles.every(v => v)) {
   nextBtn.style.display = 'inline-block';
 }
