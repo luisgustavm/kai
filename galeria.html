@@ -1,271 +1,112 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Quebra-Cabeça Mobile</title>
-<link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quebra-Cabeça</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: white;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #puzzleSelect {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .puzzle-card {
+      background: #111;
+      border-radius: 10px;
+      padding: 10px;
+      margin: 10px;
+      text-align: center;
+      width: 90vw;
+      max-width: 300px;
+      box-shadow: 0 0 10px #444;
+    }
+
+    .puzzle-card img {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    .puzzle-button {
+      margin-top: 10px;
+      padding: 10px;
+      width: 100%;
+      background: #3f51b5;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    .puzzle-button:disabled {
+      background: #555;
+      cursor: not-allowed;
+    }
+
+    .locked {
+      opacity: 0.5;
+    }
+
+    #puzzleContainer {
+      margin: 20px 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    canvas {
+      background: white;
+      border: 2px solid #555;
+      border-radius: 8px;
+      touch-action: none;
+      max-width: 100vw;
+      height: auto;
+    }
+
+    #completedImage {
+      display: none;
+      border: 2px solid #555;
+      border-radius: 8px;
+      max-width: 100%;
+    }
+
+    #nextBtn {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 1.1em;
+      background: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      display: none;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
 
-<h2>Quebra-Cabeça Mobile</h2>
+  <div id="puzzleSelect"></div>
 
-<div id="puzzleSelect"></div>
+  <div id="puzzleContainer" class="puzzle-container">
+    <canvas id="puzzleCanvas"></canvas>
+    <img id="completedImage" />
+  </div>
 
-<div id="puzzleContainer">
-  <canvas id="puzzleCanvas"></canvas>
-  <img id="completedImage" alt="Imagem Completa"/>
-</div>
+  <button id="nextBtn">Próximo</button>
 
-<div id="message"></div>
-
-<script>
-const puzzleImages = [
-  'img/kai.jpg',
-  'img/kai2.jpg',
-  'img/kai3.jpg',
-];
-
-  const size = 3;
-  let completedPuzzles = JSON.parse(localStorage.getItem('completedPuzzles')) || [false, false, false];
-  let currentPuzzleIndex = null;
-  let puzzleCompleted = false;
-
-  const puzzleSelect = document.getElementById('puzzleSelect');
-  const puzzleContainer = document.getElementById('puzzleContainer');
-  const canvas = document.getElementById('puzzleCanvas');
-  const ctx = canvas.getContext('2d');
-  const completedImage = document.getElementById('completedImage');
-  const message = document.getElementById('message');
-
-  let pieces = [];
-  let dragPiece = null;
-  let dragOffsetX = 0;
-  let dragOffsetY = 0;
-  let pieceWidth, pieceHeight;
-  let originalPieceWidth, originalPieceHeight;
-  let image = new Image();
-
-  function renderPuzzleCards() {
-    puzzleSelect.innerHTML = '';
-    for (let i = 0; i < puzzleImages.length; i++) {
-      const card = document.createElement('div');
-      card.className = 'puzzle-card';
-      if (i > 0 && !completedPuzzles[i - 1]) {
-        card.classList.add('locked');
-      }
-
-      const img = document.createElement('img');
-      img.src = puzzleImages[i];
-      img.draggable = false;
-
-      const btn = document.createElement('button');
-      btn.className = 'puzzle-button';
-      btn.textContent = completedPuzzles[i] ? `Montar Imagem ✓` : `Montar Imagem`;
-      btn.disabled = (i > 0 && !completedPuzzles[i - 1]);
-      btn.dataset.index = i;
-
-      card.appendChild(img);
-      card.appendChild(btn);
-      puzzleSelect.appendChild(card);
-
-      if (!btn.disabled) {
-        btn.addEventListener('click', () => openPuzzle(i));
-      }
-    }
-  }
-
-  function openPuzzle(index) {
-    currentPuzzleIndex = index;
-    puzzleCompleted = false;
-    completedImage.style.display = 'none';
-    canvas.style.display = 'block';
-    message.textContent = '';
-    resetCanvas();
-
-    image = new Image();
-    image.crossOrigin = "anonymous"; // para imagens externas
-    image.src = puzzleImages[index];
-
-    image.onload = () => {
-      const maxWidth = window.innerWidth * 0.9;
-      const maxHeight = window.innerHeight * 0.6;
-      const scale = Math.min(maxWidth / image.width, maxHeight / image.height, 1);
-
-      canvas.width = image.width * scale;
-      canvas.height = image.height * scale;
-
-      pieceWidth = canvas.width / size;
-      pieceHeight = canvas.height / size;
-
-      originalPieceWidth = image.width / size;
-      originalPieceHeight = image.height / size;
-
-      createPuzzle();
-      drawPuzzle();
-    };
-  }
-
-  function resetCanvas() {
-    dragPiece = null;
-    pieces = [];
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-  }
-
-  function createPuzzle() {
-    pieces = [];
-    let positions = [];
-    for (let y = 0; y < size; y++) {
-      for (let x = 0; x < size; x++) {
-        positions.push({ x, y });
-      }
-    }
-    positions.sort(() => Math.random() - 0.5);
-
-    for (let y = 0; y < size; y++) {
-      for (let x = 0; x < size; x++) {
-        let pos = positions.pop();
-        pieces.push({
-          correctX: x,
-          correctY: y,
-          x: pos.x,
-          y: pos.y
-        });
-      }
-    }
-  }
-
-  function drawPuzzle(dragging = false) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    for (let piece of pieces) {
-      if (piece !== dragPiece) {
-        ctx.drawImage(
-          image,
-          piece.correctX * originalPieceWidth, piece.correctY * originalPieceHeight,
-          originalPieceWidth, originalPieceHeight,
-          piece.x * pieceWidth, piece.y * pieceHeight,
-          pieceWidth, pieceHeight
-        );
-      }
-    }
-
-    if (dragPiece && dragging) {
-      ctx.globalAlpha = 0.7;
-      ctx.drawImage(
-        image,
-        dragPiece.correctX * originalPieceWidth, dragPiece.correctY * originalPieceHeight,
-        originalPieceWidth, originalPieceHeight,
-        dragPiece.drawX, dragPiece.drawY,
-        pieceWidth, pieceHeight
-      );
-      ctx.globalAlpha = 1.0;
-    }
-  }
-
-  function getPieceAt(x, y) {
-    return pieces.find(p => {
-      return x >= p.x * pieceWidth &&
-        x < (p.x + 1) * pieceWidth &&
-        y >= p.y * pieceHeight &&
-        y < (p.y + 1) * pieceHeight;
-    });
-  }
-
-  function checkWin() {
-    if (pieces.every(p => p.x === p.correctX && p.y === p.correctY)) {
-      puzzleCompleted = true;
-      showCompletedImage();
-      completedPuzzles[currentPuzzleIndex] = true;
-      localStorage.setItem('completedPuzzles', JSON.stringify(completedPuzzles));
-      renderPuzzleCards();
-      message.textContent = "Parabéns! Você completou o puzzle 🎉";
-    }
-  }
-
-  function showCompletedImage() {
-    canvas.style.display = 'none';
-    completedImage.src = puzzleImages[currentPuzzleIndex];
-    completedImage.style.display = 'block';
-    completedImage.width = canvas.width;
-    completedImage.height = canvas.height;
-  }
-
-  function getEventPosition(e) {
-    const rect = canvas.getBoundingClientRect();
-    let clientX, clientY;
-
-    if (e.touches && e.touches.length) {
-      clientX = e.touches[0].clientX;
-      clientY = e.touches[0].clientY;
-    } else {
-      clientX = e.clientX;
-      clientY = e.clientY;
-    }
-
-    return {
-      x: clientX - rect.left,
-      y: clientY - rect.top
-    };
-  }
-
-  let isDragging = false;
-
-  canvas.addEventListener('touchstart', e => {
-    e.preventDefault();
-    if (puzzleCompleted) return;
-
-    const { x, y } = getEventPosition(e);
-    const piece = getPieceAt(x, y);
-    if (piece) {
-      dragPiece = piece;
-      dragOffsetX = x - piece.x * pieceWidth;
-      dragOffsetY = y - piece.y * pieceHeight;
-      dragPiece.drawX = x - dragOffsetX;
-      dragPiece.drawY = y - dragOffsetY;
-      isDragging = true;
-    }
-  }, { passive: false });
-
-  canvas.addEventListener('touchmove', e => {
-    e.preventDefault();
-    if (!isDragging || !dragPiece) return;
-    const { x, y } = getEventPosition(e);
-    dragPiece.drawX = x - dragOffsetX;
-    dragPiece.drawY = y - dragOffsetY;
-    drawPuzzle(true);
-  }, { passive: false });
-
-  canvas.addEventListener('touchend', e => {
-    e.preventDefault();
-    if (!isDragging || !dragPiece) return;
-
-    const { x, y } = getEventPosition(e);
-
-    let targetX = Math.floor(x / pieceWidth);
-    let targetY = Math.floor(y / pieceHeight);
-
-    targetX = Math.min(Math.max(targetX, 0), size - 1);
-    targetY = Math.min(Math.max(targetY, 0), size - 1);
-
-    const targetPiece = pieces.find(p => p.x === targetX && p.y === targetY);
-
-    if (targetPiece && targetPiece !== dragPiece) {
-      // troca as posições
-      [dragPiece.x, dragPiece.y, targetPiece.x, targetPiece.y] = [targetPiece.x, targetPiece.y, dragPiece.x, dragPiece.y];
-    } else {
-      // reposiciona
-      dragPiece.x = targetX;
-      dragPiece.y = targetY;
-    }
-
-    dragPiece = null;
-    isDragging = false;
-    drawPuzzle();
-    checkWin();
-  }, { passive: false });
-
-  renderPuzzleCards();
-</script>
+  <script>
+   
+  </script>
 </body>
 </html>

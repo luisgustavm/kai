@@ -95,24 +95,25 @@ h2 {
 #puzzleSelect {
   display: flex;
   justify-content: center;
-  gap: 25px;
+  gap: 20px;
   flex-wrap: wrap;
+  padding: 20px;
 }
 
 /* === CARTÕES DE PUZZLE === */
 .puzzle-card {
-  width: 200px;
+  width: 180px;
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(123, 63, 199, 0.3);
   background: white;
-  padding: 15px;
+  padding: 12px;
   position: relative;
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   user-select: none;
 }
 .puzzle-card:hover:not(.locked) {
-  transform: scale(1.1);
+  transform: scale(1.05);
   box-shadow: 0 8px 25px rgba(123, 63, 199, 0.5);
 }
 .puzzle-card.locked {
@@ -124,7 +125,6 @@ h2 {
   border-radius: 12px;
   display: block;
   margin-bottom: 12px;
-  transition: filter 0.3s ease;
 }
 .puzzle-card.locked img {
   filter: grayscale(100%) brightness(0.5);
@@ -136,11 +136,10 @@ h2 {
   border: none;
   color: white;
   font-weight: 600;
-  padding: 10px 18px;
+  padding: 10px;
   border-radius: 12px;
   width: 100%;
   font-size: 1rem;
-  transition: background 0.3s ease;
   cursor: pointer;
   user-select: none;
 }
@@ -154,8 +153,8 @@ h2 {
 
 /* === ÁREA DO PUZZLE CANVAS === */
 #puzzleContainer {
-  margin: 40px auto 0;
-  max-width: 600px;
+  margin: 30px auto 0;
+  max-width: 95%;
   position: relative;
   opacity: 0;
   transform: scale(0.8);
@@ -170,13 +169,16 @@ h2 {
 
 /* === CANVAS === */
 canvas {
-  border: 5px solid #d5a6ff;
+  width: 100% !important;
+  height: auto !important;
+  border: 4px solid #d5a6ff;
   border-radius: 15px;
   box-shadow: 0 0 30px rgba(123, 63, 199, 0.25);
   display: block;
   margin: 0 auto;
   cursor: grab;
   background: white;
+  touch-action: none;
 }
 
 /* === IMAGEM COMPLETA DO PUZZLE === */
@@ -186,6 +188,38 @@ canvas {
   box-shadow: 0 0 30px rgba(123, 63, 199, 0.25);
   margin: 0 auto;
   display: none;
+}
+
+/* === BOTÃO PRÓXIMO === */
+#nextBtn {
+  display: none;
+  margin: 20px auto;
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 12px;
+  background-color: #7b3fc7;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(123, 63, 199, 0.3);
+  cursor: pointer;
+}
+#nextBtn:hover {
+  background-color: #9b5ff7;
+}
+
+/* === RESPONSIVO === */
+@media (max-width: 768px) {
+  .puzzle-card {
+    width: 100%;
+    max-width: 280px;
+  }
+  .puzzle-button {
+    font-size: 0.95rem;
+  }
+  canvas {
+    max-width: 100%;
+  }
 }
 
 /* === CONTROLES DE AÇÃO === */
