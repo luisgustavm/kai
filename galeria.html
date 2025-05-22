@@ -3,20 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <title>Quebra-Cabeças do Kai 🧩</title>
-  <script src="script2.js" defer></script>
   <script src="script.js" defer></script>
-   <script src="script3.js" defer></script>
 <link rel="stylesheet" href="styles.css">
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 </head>
 <body>
   <h1>Quebra-Cabeças 🧩</h1>
-  <h2>Faça todos os Quebra-Cabeças! Assim poderá seguir para a próxima tela.</h2>
+  <h2>Faça todos os Quebra-Cabeças! Assim poderá seguir para a proxima tela.</h2>
+<button onclick="window.location.href='inicio.html'" id="meuBotao">
+  Voltar
+</button>
+  <div id="puzzleSelect"></div>
 
-  <div id="gallery"></div>
+  <div id="puzzleContainer">
+    <canvas id="puzzleCanvas"></canvas>
+    <img id="completedImage" alt="Imagem Montada Completa" />
+    <div id="controls">
+      <button id="nextBtn" style="display: none;">Próximo</button>
 
-  <button id="nextBtn">Próximo</button>
-
+    </div>
+  </div>
+</body>
 <script>
  const puzzleImages = [
   'img/kai.jpg',
@@ -272,5 +279,4 @@ if (completedPuzzles.every(v => v)) {
 }
 
 </script>
-</body>
 </html>
