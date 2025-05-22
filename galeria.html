@@ -7,18 +7,22 @@
  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <h1>Quebra-Cabeças 🧩</h1>
+  <h2>Faça todos os Quebra-Cabeças! Assim poderá seguir para a proxima tela.</h2>
+<button onclick="window.location.href='inicio.html'" id="meuBotao">
+  Voltar
+</button>
+  <div id="puzzleSelect"></div>
 
-<h2>Quebra-Cabeça Mobile</h2>
+  <div id="puzzleContainer">
+    <canvas id="puzzleCanvas"></canvas>
+    <img id="completedImage" alt="Imagem Montada Completa" />
+    <div id="controls">
+      <button id="nextBtn" style="display: none;">Próximo</button>
 
-<div id="puzzleSelect"></div>
-
-<div id="puzzleContainer">
-  <canvas id="puzzleCanvas"></canvas>
-  <img id="completedImage" alt="Imagem Completa"/>
-</div>
-
-<div id="message"></div>
-
+    </div>
+  </div>
+</body>
 <script>
 const puzzleImages = [
   'img/kai.jpg',
@@ -266,5 +270,4 @@ const puzzleImages = [
 
   renderPuzzleCards();
 </script>
-</body>
 </html>
